@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal UPI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i data-lucide="globe"></i>
+                <h1>Universal UPI</h1>
+            </div>
+            <p class="subtitle">Global Payments, Local Feel</p>
+        </header>
+
+        <!-- Main Form Area -->
+        <main id="main-flow">
+            <!-- Payment Target Selection -->
+            <section class="card target-section">
+                <div class="tabs">
+                    <button class="tab-btn active" data-target="qr-scan">Scan QR</button>
+                    <button class="tab-btn" data-target="manual-entry">Enter ID</button>
+                </div>
+                
+                <div class="tab-content active" id="qr-scan">
+                    <div class="mock-scanner">
+                        <i data-lucide="scan-line" class="scan-icon"></i>
+                        <p>Click to mock scan</p>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="manual-entry">
+                    <div class="input-group">
+                        <label for="payment-id">UPI / Payment ID</label>
+                        <input type="text" id="payment-id" placeholder="e.g. user@bank or +123456789">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Currencies & Amount -->
+            <section class="card amount-section">
+                <div class="currency-selectors">
+                    <div class="input-group">
+                        <label for="sender-country">From (Your Currency)</label>
+                        <select id="sender-country">
+                            <option value="USD">🇺🇸 USD - US Dollar</option>
+                            <option value="INR">🇮🇳 INR - Indian Rupee</option>
+                            <option value="EUR">🇪🇺 EUR - Euro</option>
+                            <option value="GBP">🇬🇧 GBP - British Pound</option>
+                        </select>
+                    </div>
+                    <i data-lucide="arrow-right-left" class="exchange-icon"></i>
+                    <div class="input-group">
+                        <label for="receiver-country">To (Recipient Currency)</label>
+                        <select id="receiver-country">
+                            <option value="INR">🇮🇳 INR - Indian Rupee</option>
+                            <option value="USD">🇺🇸 USD - US Dollar</option>
+                            <option value="EUR">🇪🇺 EUR - Euro</option>
+                            <option value="GBP">🇬🇧 GBP - British Pound</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="input-group amount-group">
+                    <label for="send-amount">Amount to Send</label>
+                    <div class="amount-wrapper">
+                        <span class="currency-symbol" id="sender-symbol">$</span>
+                        <input type="number" id="send-amount" placeholder="0.00" min="1">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Conversion Breakdown -->
+            <section class="card breakdown-section" id="breakdown-section">
+                <h3>Transaction Details</h3>
+                <div class="breakdown-row">
+                    <span>Exchange Rate</span>
+                    <span id="display-rate">--</span>
+                </div>
+                <div class="breakdown-row">
+                    <span>Network Fee (1%)</span>
+                    <span id="display-fee">--</span>
+                </div>
+                <div class="breakdown-row highlight">
+                    <span>Recipient Gets</span>
+                    <span id="display-converted">--</span>
+                </div>
+            </section>
+
+            <button id="btn-confirm" class="primary-btn" disabled>Confirm Details</button>
+        </main>
+
+        <!-- Loading State -->
+        <div id="loading-flow" class="hidden">
+            <div class="loader"></div>
+            <h2 id="loading-text">Routing Payment...</h2>
+            <p>Connecting to <span id="network-name">Local Network</span></p>
+        </div>
+
+        <!-- Success State -->
+        <div id="success-flow" class="hidden card text-center">
+            <div class="success-icon-wrapper">
+                <i data-lucide="check-circle" class="success-icon"></i>
+            </div>
+            <h2>Payment Successful!</h2>
+            <p class="success-amount" id="final-amount">--</p>
+            <p class="success-subtitle">Sent to <span id="final-id">Recipient</span></p>
+            
+            <div class="receipt-details">
+                <div class="breakdown-row">
+                    <span>Network Used</span>
+                    <strong id="final-network">UPI (India)</strong>
+                </div>
+                <div class="breakdown-row">
+                    <span>Transaction ID</span>
+                    <strong id="final-tx">TX123456789</strong>
+                </div>
+            </div>
+            
+            <button id="btn-reset" class="secondary-btn">Send Another Payment</button>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

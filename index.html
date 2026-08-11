@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body>
     <div class="app-container">
@@ -29,10 +30,7 @@
                 </div>
                 
                 <div class="tab-content active" id="qr-scan">
-                    <div class="mock-scanner">
-                        <i data-lucide="scan-line" class="scan-icon"></i>
-                        <p>Click to mock scan</p>
-                    </div>
+                    <div id="reader" style="width: 100%; border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.2);"></div>
                 </div>
 
                 <div class="tab-content" id="manual-entry">

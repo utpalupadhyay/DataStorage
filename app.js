@@ -46,6 +46,40 @@ document.addEventListener('DOMContentLoaded', () => {
         'GBP': 'Faster Payments (UK)'
     };
 
+    // --- QR Scanner Setup ---
+    let html5QrcodeScanner = null;
+
+    const startScanner = () => {
+        if (!html5QrcodeScanner && document.getElementById('reader')) {
+            html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader",
+                { fps: 10, qrbox: {width: 250, height: 250}, aspectRatio: 1.0 },
+                /* verbose= */ false
+            );
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        }
+    };
+
+    const stopScanner = () => {
+        if (html5QrcodeScanner) {
+            html5QrcodeScanner.clear().catch(error => {
+                console.error("Failed to clear html5QrcodeScanner. ", error);
+            });
+            html5QrcodeScanner = null;
+        }
+    };
+
+    function onScanSuccess(decodedText, decodedResult) {
+        paymentId.value = decodedText;
+        stopScanner();
+        tabBtns[1].click(); // Switch to manual entry to show result
+        updateCalculations();
+    }
+
+    function onScanFailure(error) {
+        // Ignore background failures
+    }
+
     // --- Tab Switching ---
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -53,9 +87,19 @@ document.addEventListener('DOMContentLoaded', () => {
             tabContents.forEach(c => c.classList.remove('active'));
             
             btn.classList.add('active');
-            document.getElementById(btn.dataset.target).classList.add('active');
+            const targetId = btn.dataset.target;
+            document.getElementById(targetId).classList.add('active');
+
+            if (targetId === 'qr-scan') {
+                startScanner();
+            } else {
+                stopScanner();
+            }
         });
     });
+
+    // Start scanner initially since it's the default tab
+    setTimeout(startScanner, 500);
 
     // --- Currency Conversion Logic ---
     const fetchExchangeRate = async (base, target) => {
@@ -130,14 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (parseFloat(sendAmount.value) > 0) updateCalculations();
     });
 
-    // --- Mock Scanner ---
-    const mockScanner = document.querySelector('.mock-scanner');
-    mockScanner.addEventListener('click', () => {
-        paymentId.value = "merchant@upi";
-        // Auto-switch to manual entry to show it was "scanned"
-        tabBtns[1].click();
-        updateCalculations();
-    });
+    // Mock scanner removed.
 
     // --- Confirmation Flow ---
     btnConfirm.addEventListener('click', () => {

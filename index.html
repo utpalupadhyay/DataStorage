@@ -4,11 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LIC Policy & Customer Information Portal | एलआईसी पॉलिसी पोर्टल</title>
-    <!-- Google Font: Outfit -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .modal-overlay { display: none; }
+        .modal-overlay.active { display: flex !important; }
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
     <div class="app-wrapper">
@@ -298,7 +305,7 @@
                     <video id="camera-video" autoplay playsinline></video>
                     <canvas id="camera-canvas"></canvas>
                 </div>
-                <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                <p style="font-size: 0.85rem; color: #cbd5e1;">
                     कैमरे के सामने चेहरा/दस्तावेज रखें और नीचे बटन पर क्लिक करें।
                 </p>
             </div>
@@ -330,8 +337,8 @@
                     <img id="view-avatar" src="" alt="Customer Photo" class="detail-avatar">
                     <div>
                         <span id="view-sr-no" class="sr-no-badge">S.No. 1</span>
-                        <h2 id="view-customer-name" style="font-size: 1.4rem; color: var(--text-primary); margin-top: 4px;">--</h2>
-                        <p id="view-phone" style="color: var(--text-muted); font-size: 0.9rem;">--</p>
+                        <h2 id="view-customer-name" style="font-size: 1.4rem; color: #ffffff; margin-top: 4px;">--</h2>
+                        <p id="view-phone" style="color: #94a3b8; font-size: 0.9rem;">--</p>
                     </div>
                 </div>
 

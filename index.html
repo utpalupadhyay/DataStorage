@@ -1,133 +1,398 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal UPI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <title>LIC Policy & Customer Information Portal | एलआईसी पॉलिसी पोर्टल</title>
+    <!-- Google Font: Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app-container">
+    <div class="app-wrapper">
         <!-- Header -->
         <header>
-            <div class="logo">
-                <i data-lucide="globe"></i>
-                <h1>Universal UPI</h1>
+            <div class="brand-container">
+                <div class="brand-logo">
+                    <i data-lucide="shield-check" style="width: 28px; height: 28px;"></i>
+                </div>
+                <div class="brand-info">
+                    <h1>LIC Customer Information Portal</h1>
+                    <p>भारतीय जीवन बीमा निगम - ग्राहक एवं पॉलिसी सूचना प्रणाली (Serial Wise)</p>
+                </div>
             </div>
-            <p class="subtitle">Global Payments, Local Feel</p>
+            <div class="header-actions">
+                <button id="btn-export-csv" class="btn btn-secondary">
+                    <i data-lucide="download"></i>
+                    Export CSV
+                </button>
+                <button id="btn-print" class="btn btn-secondary" onclick="window.print()">
+                    <i data-lucide="printer"></i>
+                    Print Record
+                </button>
+            </div>
         </header>
 
-        <!-- Main Form Area -->
-        <main id="main-flow">
-            <!-- Payment Target Selection -->
-            <section class="card target-section">
-                <div class="tabs">
-                    <button class="tab-btn active" data-target="qr-scan">Scan QR</button>
-                    <button class="tab-btn" data-target="manual-entry">Enter ID</button>
+        <!-- KPI Dashboard Cards -->
+        <section class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon blue">
+                    <i data-lucide="file-text"></i>
                 </div>
-                
-                <div class="tab-content active" id="qr-scan">
-                    <div id="reader" style="width: 100%; border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.2);"></div>
-                </div>
-
-                <div class="tab-content" id="manual-entry">
-                    <div class="input-group">
-                        <label for="payment-id">UPI / Payment ID</label>
-                        <input type="text" id="payment-id" placeholder="e.g. user@bank or +123456789">
-                    </div>
-                </div>
-            </section>
-
-            <!-- Currencies & Amount -->
-            <section class="card amount-section">
-                <div class="currency-selectors">
-                    <div class="input-group">
-                        <label for="sender-country">From (Your Currency)</label>
-                        <select id="sender-country">
-                            <option value="USD">🇺🇸 USD - US Dollar</option>
-                            <option value="INR">🇮🇳 INR - Indian Rupee</option>
-                            <option value="EUR">🇪🇺 EUR - Euro</option>
-                            <option value="GBP">🇬🇧 GBP - British Pound</option>
-                        </select>
-                    </div>
-                    <i data-lucide="arrow-right-left" class="exchange-icon"></i>
-                    <div class="input-group">
-                        <label for="receiver-country">To (Recipient Currency)</label>
-                        <select id="receiver-country">
-                            <option value="INR">🇮🇳 INR - Indian Rupee</option>
-                            <option value="USD">🇺🇸 USD - US Dollar</option>
-                            <option value="EUR">🇪🇺 EUR - Euro</option>
-                            <option value="GBP">🇬🇧 GBP - British Pound</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="input-group amount-group">
-                    <label for="send-amount">Amount to Send</label>
-                    <div class="amount-wrapper">
-                        <span class="currency-symbol" id="sender-symbol">$</span>
-                        <input type="number" id="send-amount" placeholder="0.00" min="1">
-                    </div>
-                </div>
-            </section>
-
-            <!-- Conversion Breakdown -->
-            <section class="card breakdown-section" id="breakdown-section">
-                <h3>Transaction Details</h3>
-                <div class="breakdown-row">
-                    <span>Exchange Rate</span>
-                    <span id="display-rate">--</span>
-                </div>
-                <div class="breakdown-row">
-                    <span>Network Fee (1%)</span>
-                    <span id="display-fee">--</span>
-                </div>
-                <div class="breakdown-row highlight">
-                    <span>Recipient Gets</span>
-                    <span id="display-converted">--</span>
-                </div>
-            </section>
-
-            <button id="btn-confirm" class="primary-btn" disabled>Confirm Details</button>
-        </main>
-
-        <!-- Loading State -->
-        <div id="loading-flow" class="hidden">
-            <div class="loader"></div>
-            <h2 id="loading-text">Routing Payment...</h2>
-            <p>Connecting to <span id="network-name">Local Network</span></p>
-        </div>
-
-        <!-- Success State -->
-        <div id="success-flow" class="hidden card text-center">
-            <div class="success-icon-wrapper">
-                <i data-lucide="check-circle" class="success-icon"></i>
-            </div>
-            <h2>Payment Successful!</h2>
-            <p class="success-amount" id="final-amount">--</p>
-            <p class="success-subtitle">Sent to <span id="final-id">Recipient</span></p>
-            
-            <div class="receipt-details">
-                <div class="breakdown-row">
-                    <span>Network Used</span>
-                    <strong id="final-network">UPI (India)</strong>
-                </div>
-                <div class="breakdown-row">
-                    <span>Transaction ID</span>
-                    <strong id="final-tx">TX123456789</strong>
+                <div class="kpi-data">
+                    <h3>Total Policies</h3>
+                    <p id="kpi-total-policies">0</p>
                 </div>
             </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon green">
+                    <i data-lucide="check-circle-2"></i>
+                </div>
+                <div class="kpi-data">
+                    <h3>Active Policies</h3>
+                    <p id="kpi-active-policies">0</p>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon gold">
+                    <i data-lucide="clock"></i>
+                </div>
+                <div class="kpi-data">
+                    <h3>Due Soon (किश्त बाकी)</h3>
+                    <p id="kpi-due-policies">0</p>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon purple">
+                    <i data-lucide="indian-rupee"></i>
+                </div>
+                <div class="kpi-data">
+                    <h3>Total Sum Assured</h3>
+                    <p id="kpi-total-assured">₹0</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Controls (Search & Filter) -->
+        <section class="controls-card">
+            <div class="search-box">
+                <i data-lucide="search"></i>
+                <input type="text" id="search-input" placeholder="सीरियल नं., ग्राहक का नाम, पॉलिसी नं. या फोन से खोजें...">
+            </div>
+
+            <div class="filter-group">
+                <select id="filter-status" class="filter-select">
+                    <option value="all">सभी स्टेटस (All Status)</option>
+                    <option value="active">Active (सक्रिय)</option>
+                    <option value="due">Due Soon (किश्त देय)</option>
+                    <option value="lapsed">Lapsed (लैप्स)</option>
+                    <option value="matured">Matured (पूरा हुआ)</option>
+                </select>
+
+                <select id="filter-plan" class="filter-select">
+                    <option value="all">सभी प्लान (All LIC Plans)</option>
+                    <option value="Jeevan Labh">Jeevan Labh (जीवन लाभ)</option>
+                    <option value="Jeevan Anand">Jeevan Anand (जीवन आनंद)</option>
+                    <option value="Jeevan Umang">Jeevan Umang (जीवन उमंग)</option>
+                    <option value="Money Back">Money Back (मनी बैक)</option>
+                    <option value="Tech Term">Tech Term (टर्म प्लान)</option>
+                    <option value="SIIP">SIIP (एसआईपी)</option>
+                </select>
+
+                <button id="btn-add-new" class="btn btn-primary">
+                    <i data-lucide="plus-circle"></i>
+                    नया LIC रिकॉर्ड जोड़ें
+                </button>
+            </div>
+        </section>
+
+        <!-- Policy Data Table -->
+        <section class="table-container">
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>ग्राहक / फोटो</th>
+                            <th>पॉलिसी नंबर</th>
+                            <th>LIC प्लान का नाम</th>
+                            <th>बीमा राशि (Sum Assured)</th>
+                            <th>प्रीमियम (Premium)</th>
+                            <th>अगली किश्त तारीख</th>
+                            <th>परिपक्वता तिथि</th>
+                            <th>स्टेटस</th>
+                            <th>कार्रवाई (Actions)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="policy-table-body">
+                        <!-- Dynamic Rows loaded via app.js -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="no-data-msg" class="no-data hidden">
+                <i data-lucide="folder-search"></i>
+                <p>कोई रिकॉर्ड नहीं मिला! कृपया नई पॉलिसी जोड़ें या सर्च फ़िल्टर बदलें।</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>© 2026 LIC Policyholder Management System - सर्वाधिकार सुरक्षित | Designed for Quick Serial Record Tracking</p>
+        </footer>
+    </div>
+
+    <!-- Modal: Add / Edit Policy Form -->
+    <div id="modal-policy-form" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2 id="modal-form-title">
+                    <i data-lucide="user-plus"></i>
+                    LIC पॉलिसी जानकारी भरें
+                </h2>
+                <button class="close-modal-btn" data-close="modal-policy-form">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
             
-            <button id="btn-reset" class="secondary-btn">Send Another Payment</button>
+            <form id="policy-form">
+                <div class="modal-body">
+                    <input type="hidden" id="form-policy-id">
+                    <input type="hidden" id="form-photo-data">
+
+                    <!-- Photo Upload / Camera Section -->
+                    <div class="photo-uploader-box">
+                        <div class="photo-preview-container">
+                            <img id="photo-preview-img" src="" alt="Photo Preview" class="hidden">
+                            <div id="photo-preview-placeholder" class="photo-preview-placeholder">
+                                <i data-lucide="user" style="width: 36px; height: 36px;"></i>
+                                <span style="font-size: 0.7rem;">फोटो नहीं है</span>
+                            </div>
+                        </div>
+
+                        <div class="photo-action-buttons">
+                            <button type="button" id="btn-open-camera" class="btn btn-secondary" style="font-size: 0.82rem; padding: 6px 12px;">
+                                <i data-lucide="camera"></i>
+                                Pic Click Karein (Camera)
+                            </button>
+                            
+                            <label class="btn btn-secondary" style="font-size: 0.82rem; padding: 6px 12px; cursor: pointer;">
+                                <i data-lucide="upload"></i>
+                                Photo Upload Karein
+                                <input type="file" id="photo-file-input" accept="image/*" style="display: none;">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="input-customer-name">ग्राहक का नाम (Customer Name) *</label>
+                            <input type="text" id="input-customer-name" required placeholder="जैसे: उत्कर्ष उपाध्याय">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-phone">मोबाइल नंबर (Mobile No.) *</label>
+                            <input type="tel" id="input-phone" required placeholder="जैसे: 9876543210">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-policy-no">LIC पॉलिसी नंबर (Policy No.) *</label>
+                            <input type="text" id="input-policy-no" required placeholder="जैसे: 876543210">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-plan-name">LIC प्लान का नाम (Plan Name) *</label>
+                            <select id="input-plan-name" required>
+                                <option value="Jeevan Labh (Table 936)">Jeevan Labh (936)</option>
+                                <option value="Jeevan Anand (Table 915)">Jeevan Anand (915)</option>
+                                <option value="Jeevan Umang (Table 945)">Jeevan Umang (945)</option>
+                                <option value="Money Back 20 Yrs (920)">Money Back 20 Yrs (920)</option>
+                                <option value="Tech Term Plan (854)">Tech Term Plan (854)</option>
+                                <option value="SIIP Unit Linked (852)">SIIP Unit Linked (852)</option>
+                                <option value="Endowment Plan (914)">Endowment Plan (914)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-sum-assured">बीमा राशि (Sum Assured ₹) *</label>
+                            <input type="number" id="input-sum-assured" required min="10000" placeholder="500000">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-premium-amount">प्रीमियम राशि (Premium Amount ₹) *</label>
+                            <input type="number" id="input-premium-amount" required min="100" placeholder="25000">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-frequency">भुगतान आवृत्ति (Frequency)</label>
+                            <select id="input-frequency">
+                                <option value="Yearly">वार्षिक (Yearly)</option>
+                                <option value="Half-Yearly">अर्ध-वार्षिक (Half-Yearly)</option>
+                                <option value="Quarterly">त्रैमासिक (Quarterly)</option>
+                                <option value="Monthly">मासिक (Monthly / ECS)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-status">पॉलिसी स्टेटस (Policy Status)</label>
+                            <select id="input-status">
+                                <option value="active">Active (सक्रिय)</option>
+                                <option value="due">Due Soon (किश्त देय)</option>
+                                <option value="lapsed">Lapsed (लैप्स)</option>
+                                <option value="matured">Matured (परिपक्व)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-due-date">अगली किश्त तिथि (Next Due Date) *</label>
+                            <input type="date" id="input-due-date" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-maturity-date">परिपक्वता तिथि (Maturity Date) *</label>
+                            <input type="date" id="input-maturity-date" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="input-nominee">नॉमिनी का नाम व संबंध (Nominee Details)</label>
+                            <input type="text" id="input-nominee" placeholder="जैसे: सुनिता उपाध्याय (पत्नी)">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="input-notes">एजेंट नोट्स / अतिरिक्त विवरण (Remarks)</label>
+                            <textarea id="input-notes" rows="2" placeholder="जैसे: ब्रांच कोड 883, एवी मोड एक्टिव..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close="modal-policy-form">रद्द करें</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i data-lucide="check"></i>
+                        सुरक्षित करें (Save Policy)
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-    
+
+    <!-- Modal: Live Camera Capture -->
+    <div id="modal-camera" class="modal-overlay">
+        <div class="modal-card" style="max-width: 440px;">
+            <div class="modal-header">
+                <h2>
+                    <i data-lucide="camera"></i>
+                    फोटो क्लिक करें (Click Photo)
+                </h2>
+                <button class="close-modal-btn" id="btn-close-camera">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body text-center">
+                <div class="camera-feed-box">
+                    <video id="camera-video" autoplay playsinline></video>
+                    <canvas id="camera-canvas"></canvas>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                    कैमरे के सामने चेहरा/दस्तावेज रखें और नीचे बटन पर क्लिक करें।
+                </p>
+            </div>
+
+            <div class="modal-footer" style="justify-content: center;">
+                <button type="button" id="btn-snap-photo" class="btn btn-primary">
+                    <i data-lucide="aperture"></i>
+                    फोटो खीचें (Capture Photo)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: View Detailed Policy Info -->
+    <div id="modal-view-detail" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>
+                    <i data-lucide="file-check"></i>
+                    LIC पॉलिसी संपूर्ण विवरण
+                </h2>
+                <button class="close-modal-btn" data-close="modal-view-detail">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="detail-card-header">
+                    <img id="view-avatar" src="" alt="Customer Photo" class="detail-avatar">
+                    <div>
+                        <span id="view-sr-no" class="sr-no-badge">S.No. 1</span>
+                        <h2 id="view-customer-name" style="font-size: 1.4rem; color: var(--text-primary); margin-top: 4px;">--</h2>
+                        <p id="view-phone" style="color: var(--text-muted); font-size: 0.9rem;">--</p>
+                    </div>
+                </div>
+
+                <div class="detail-info-grid">
+                    <div class="detail-item">
+                        <label>LIC पॉलिसी नंबर</label>
+                        <span id="view-policy-no" class="policy-num">--</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>स्टेटस</label>
+                        <span id="view-status-badge">--</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>LIC प्लान का नाम</label>
+                        <span id="view-plan-name">--</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>बीमा राशि (Sum Assured)</label>
+                        <span id="view-sum-assured">--</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>प्रीमियम राशि & फ्रीक्वेंसी</label>
+                        <span id="view-premium">--</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>अगली किश्त तारीख (Due Date)</label>
+                        <span id="view-due-date">--</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>परिपक्वता तिथि (Maturity)</label>
+                        <span id="view-maturity-date">--</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>नॉमिनी विवरण</label>
+                        <span id="view-nominee">--</span>
+                    </div>
+
+                    <div class="detail-item" style="grid-column: span 2;">
+                        <label>रिमार्क / एजेंट नोट्स</label>
+                        <span id="view-notes" style="font-size: 0.95rem; font-weight: 400;">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-close="modal-view-detail">बंद करें</button>
+                <button type="button" id="btn-print-single" class="btn btn-primary" onclick="window.print()">
+                    <i data-lucide="printer"></i>
+                    स्लिप प्रिंट करें
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
-    <script>
-        lucide.createIcons();
-    </script>
 </body>
 </html>
